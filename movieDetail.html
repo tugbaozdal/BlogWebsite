@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Film Detay</title>
+  <link rel="stylesheet" href="movieDetail.css">
+</head>
+<body>
+  <div class="movie-detail-container">
+    <div class="movie-header">
+      <!-- TMDb API'den alınan film poster URL'sini buraya koyun -->
+      <img src="MOVIE_POSTER_URL" alt="Film Posteri">
+      <div>
+        <!-- TMDb API'den alınan film başlığını buraya koyun -->
+        <h1>MOVIE_TITLE</h1>
+        <!-- TMDb API'den alınan film çıkış tarihi ve türlerini buraya koyun -->
+        <p class="meta">Çıkış Tarihi: MOVIE_RELEASE_DATE | Türler: MOVIE_GENRES</p>
+      </div>
+    </div>
+
+    <!-- TMDb API'den alınan film açıklamasını buraya koyun -->
+    <p class="overview">MOVIE_OVERVIEW</p>
+
+    <div class="comment-section">
+      <h2>Yorum Yap</h2>
+      <textarea placeholder="Yorumunuzu buraya yazın..."></textarea>
+      <button>Gönder</button>
+
+      <div class="comments">
+        <!-- Kullanıcı yorumları dinamik olarak buraya yüklenecek -->
+        <div class="comment">Örnek kullanıcı yorumu</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // TMDb API ile film detaylarını alma örneği
+    // `YOUR_API_KEY` yerine gerçek API anahtarınızı koyun
+
+    const apiKey = 'YOUR_API_KEY';
+    const movieId = 'MOVIE_ID'; // Seçilen filmin ID'sini buraya koyun
+
+    fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=tr-TR`)
+      .then(response => response.json())
+      .then(data => {
+        document.querySelector('img').src = `https://image.tmdb.org/t/p/w500${data.poster_path}`;
+        document.querySelector('h1').textContent = data.title;
+        document.querySelector('.meta').textContent = `Çıkış Tarihi: ${data.release_date} | Türler: ${data.genres.map(genre => genre.name).join(', ')}`;
+        document.querySelector('.overview').textContent = data.overview;
+      })
+      .catch(error => console.error('Film detayları alınırken bir hata oluştu:', error));
+  </script>
+</body>
+</html>
