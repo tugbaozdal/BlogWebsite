@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Detail</title>
+  <link rel="stylesheet" href="movieDetail.css">
+</head>
+<body>
+  <div class="movie-detail-container">
+    <header class="header">
+      <h1>Movie Details</h1>
+    </header>
+
+    <div class="movie-header">
+      <!-- Film posteri buraya gelecek -->
+      <img src="MOVIE_POSTER_URL" alt="Movie Poster">
+      <div>
+        <!-- Film başlığı ve meta bilgileri buraya gelecek -->
+        <h1>MOVIE_TITLE</h1>
+        <p class="meta">Release Date: MOVIE_RELEASE_DATE | Genres: MOVIE_GENRES</p>
+      </div>
+    </div>
+
+    <p class="overview">MOVIE_OVERVIEW</p>
+
+    <div class="comment-section">
+      <h2>Leave a Comment</h2>
+      <!-- Kullanıcının takma adını girebileceği alan -->
+      <input type="text" id="nickname" placeholder="Enter your nickname...">
+      <textarea id="comment" placeholder="Write your comment here..."></textarea>
+      <button id="submit-comment">Submit</button>
+
+      <div class="comments">
+        <h3>User Comments</h3>
+        <!-- Yorumlar dinamik olarak buraya yüklenecek -->
+        <div class="comment">Example comment from another user</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const apiKey = 'YOUR_API_KEY';
+    const movieId = 'MOVIE_ID';
+
+    // Film detaylarını yükle
+    fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=en-US`)
+      .then(response => response.json())
+      .then(data => {
+        document.querySelector('img').src = `https://image.tmdb.org/t/p/w500${data.poster_path}`;
+        document.querySelector('h1').textContent = data.title;
+        document.querySelector('.meta').textContent = `Release Date: ${data.release_date} | Genres: ${data.genres.map(genre => genre.name).join(', ')}`;
+        document.querySelector('.overview').textContent = data.overview;
+      })
+      .catch(error => console.error('Error fetching movie details:', error));
+
+    // Yorum gönderme işlevi
+    document.getElementById('submit-comment').addEventListener('click', () => {
+      const nickname = document.getElementById('nickname').value;
+      const comment = document.getElementById('comment').value;
+
+      if (!nickname || !comment) {
+        alert('Please enter both a nickname and a comment!');
+        return;
+      }
+
+      const commentContainer = document.createElement('div');
+      commentContainer.classList.add('comment');
+      commentContainer.textContent = `${nickname}: ${comment}`;
+
+      document.querySelector('.comments').appendChild(commentContainer);
+
+      // Alanları temizle
+      document.getElementById('nickname').value = '';
+      document.getElementById('comment').value = '';
+    });
+  </script>
+</body>
+</html>
